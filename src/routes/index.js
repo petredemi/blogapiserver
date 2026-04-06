@@ -2,23 +2,25 @@ import { Router } from 'express';
 import jwt from "jsonwebtoken"
 import {getUsers, verifyToken} from '../controllers/users.js'
 import { getMessages} from '../controllers/messages.js';
+import { getComments } from '../controllers/commentsscripts.js';
 import user from './user.js'
 import message from './message.js'
 import login from './session.js'
 import picture from './pictures.js'
+//import comments from './comment.js'
 
 const firstpage = Router()
 
 firstpage.get("/",verifyToken, async (req, res) => {
   const allUsers = await getUsers()
   const allMessages = await getMessages()
-  console.log(allUsers)
+  //console.log(comments)
    // function findName(y){
     //    let us = allUsers.find(x => x.id == y)
      //   return us.name
    // }
  jwt.verify(req.token, 'secretekey', async (err, authData) =>{
-   console.log(authData)
+   //console.log(authData)
      if(err){
        res.sendStatus(403)
      }else{
@@ -37,5 +39,7 @@ export default {
     user,
     message,
     login,
-    picture
+    picture,
+   // comments
+
 }

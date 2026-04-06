@@ -4,13 +4,13 @@ import { prisma } from '../../lib/prisma.js';
 
 async function getMessages(){
     const messages = await prisma.post.findMany()
-    console.log(messages)
+   // console.log(messages)
     return messages
   } 
 async function addMessage(x, y, w){
     const message = await prisma.post.create({
    data: {
-      title: x,
+      title:x,
       content: y,
       authorId: w,
       published:true

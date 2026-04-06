@@ -69,15 +69,19 @@ picture.post('/',verifyToken, async (req, res, next) =>{
                   console.log(err.message)
                 }
               let x = req.file
-              console.log(x)
+              if(x == undefined){return}
+            //  console.log(x)
                 let xx = await uploadImage(x.path)
-                console.log(xx)
+              //  console.log(xx)
                 await uploadimgDb(xx.secure_url, authData.user.id)
-                next()             
-            })    
+                
+                //next()             
+                res.json(xx.secure_url)
+            })  
+           // console.log(xx)  
           }
+          //res.json('jyujuty')
       })
-        res.json('dvgervgrt')
 })
     async function uploadImage(imagePath){
                 // Use the uploaded file's name as the asset's public ID and 
@@ -111,9 +115,10 @@ picture.post('/',verifyToken, async (req, res, next) =>{
                   console.log(err.message)
                 }
               let x = req.file
+              if(x == undefined){return}
               console.log(x)
                 let xx = await uploadImage(x.path)
-                console.log(xx)
+               // console.log(xx)
                 await uploadPostPic(xx.secure_url, Number(y))
                 next()             
             })    

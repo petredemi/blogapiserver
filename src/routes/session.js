@@ -7,11 +7,14 @@ import jwt from 'jsonwebtoken'
 const login = Router()
 login.post('/', async (req, res) => {
     const {email, password} = await req.body
+    if (email == '' || password == ''){return}
     const loguserx = await logUser(email)
+    if( loguserx == undefined){return}
     const match =  await bcrypt.compare(password, loguserx.password);
-    const user = { id: loguserx.id, email: loguserx.email, name: loguserx.name, profile: loguserx.profile}
+    console.log(match)
     if(!match){ return  res.json({message: 'incorect password'})}
     else{ 
+        const user = { id: loguserx.id, email: loguserx.email, name: loguserx.name}
         jwt.sign({user}, 'secretekey',{expiresIn: '1h'}, (err, token) =>{
             res.json({
                 token: token

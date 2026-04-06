@@ -75,6 +75,7 @@ app.use('/user', routes.user)
 app.use('/message', routes.message)
 app.use('/log-in', routes.login)
 app.use('/picture', routes.picture)
+//app.use('/messages', routes.comments)
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

@@ -7,7 +7,9 @@ async function getUsers(){
           id: true,
           name: true,
           email: true,
-          profile: true
+          profile: true,
+          profession: true,
+          blogauthor:true
         }
     })
   //  console.log(users)
@@ -17,25 +19,30 @@ async function getNames() {
     const usernames = await prisma.user.findMany({
       select:{
         id: true,
-        name: true
+        name: true,
+        blogauthor: true,
+        requestauth: true
       }
     })
     console.log(usernames)
     return usernames
   
 }
-async function addUser(x, y, z){
+async function addUser(x, y, z, v, w){
     const user = await prisma.user.create({
     data: {
       name: x,
       email: y,
       password: z,
+      profession: v,
+      requestauth: w
+
     },
     include: {
       posts: true,
     },
   })
- return { id: user.id, name: user.name, email: user.email}
+ return { id: user.id, name: user.name, email: user.email, profession: user.profession}
     
 }
 async function logUser(email) {
@@ -45,8 +52,9 @@ async function logUser(email) {
       //      password: password
             },
         })
-     //   console.log(user)
-     return user
+        console.log(user)
+     if (user == null){return}
+        return user
 }
 async function uploadimgDb(xfile, iduser){
           const profile = await prisma.user.update({
@@ -80,6 +88,4 @@ function verifyToken(req, res, next){
     res.sendStatus(403)
   }
 }
-
-
-  export {getUsers, addUser, logUser, verifyToken, getNames, uploadimgDb}
+ export {getUsers, addUser, logUser, verifyToken, getNames, uploadimgDb}

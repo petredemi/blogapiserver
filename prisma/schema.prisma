@@ -13,19 +13,27 @@ datasource db {
   provider = "postgresql"
 }
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  profile String?
-  password String?
-  posts Post[]
+  id          Int     @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  email       String  @unique
+  name        String?
+  profession  String?
+  profile     String?
+  password    String?
+  requestauth Boolean @default(false)
+  blogauthor  Boolean @default(false)
+  posts       Post[]
+  comments    Comment[]
 }
 
 model Post {
   id        Int     @id @default(autoincrement())
-  title     String
+  title     String?
   content   String?
   picture   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   published Boolean @default(false)
   author    User    @relation(fields: [authorId], references: [id])
   authorId  Int
@@ -33,9 +41,14 @@ model Post {
 }
 model Comment {
   id          Int     @id @default(autoincrement())
-  author      String
+  authorName  String?
   content     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   published   Boolean  @default(false)
   postx       Post @relation(fields: [postId], references: [id])
   postId      Int
+  author      User @relation(fields: [authorId], references: [id])
+  authorId    Int
+
 }
