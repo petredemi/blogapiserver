@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import jwt from "jsonwebtoken"
-import {getUsers, verifyToken} from '../controllers/users.js'
+import {getUsers, verifyToken, getUsersAuth} from '../controllers/users.js'
 import { getMessages} from '../controllers/messages.js';
 import { getComments } from '../controllers/commentsscripts.js';
 import user from './user.js'
@@ -12,22 +12,29 @@ import picture from './pictures.js'
 const firstpage = Router()
 
 firstpage.get("/",verifyToken, async (req, res) => {
-  const allUsers = await getUsers()
-  const allMessages = await getMessages()
-  //console.log(comments)
-   // function findName(y){
-    //    let us = allUsers.find(x => x.id == y)
-     //   return us.name
-   // }
+ 
  jwt.verify(req.token, 'secretekey', async (err, authData) =>{
-   //console.log(authData)
+  if(authData == undefined){return}
+  let loggeduser = authData.user.email
+  async function checkIfAuth(){
+    if (loggeduser == 'petrudem@yahoo.com'){
+      return  await getUsers(loggeduser)
+    }else{
+      return await getUsersAuth(loggeduser)
+    }
+  }
+   const allUsers =  await checkIfAuth()
+    //const allUsers = 
+  const allMessages = await getMessages()
+   console.log(authData)
      if(err){
        res.sendStatus(403)
      }else{
       res.setHeader( 'Content-Type', 'application/json')
         res.json({
-        users: allUsers,  
-        messages: allMessages,
+        users: allUsers.users,
+        authuser: allUsers.authUser,
+        messages: allMessages.messages,
         authData: authData
         })
      }

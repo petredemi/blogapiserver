@@ -25,6 +25,8 @@ model User {
   blogauthor  Boolean @default(false)
   posts       Post[]
   comments    Comment[]
+  msgadmins   Msgadmin[]
+
 }
 
 model Post {
@@ -51,4 +53,12 @@ model Comment {
   author      User @relation(fields: [authorId], references: [id])
   authorId    Int
 
+}
+model Msgadmin {
+  id        Int     @id @default(autoincrement())
+  message   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  author    User    @relation(fields: [authorId], references: [id])
+  authorId  Int
 }

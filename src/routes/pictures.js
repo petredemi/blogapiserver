@@ -1,4 +1,5 @@
 import multer from 'multer'
+import { prisma } from '../../lib/prisma.js';
 import { v2 as cloudinary} from 'cloudinary'
 import path from 'path'
 import "dotenv"
@@ -56,8 +57,12 @@ var errorMessages = {
             }
 const upload = multer({ storage: storage, fileFilter:fileFilter, limits:{fileSize: 2 * 1024 * 1024}}).single('profileimg')
             
-picture.post('/',verifyToken, async (req, res, next) =>{
+picture.post('/',verifyToken, async (req, res, next) =>{   //for profile picture
         jwt.verify(req.token, 'secretekey', async (err, authData) =>{
+          if(authData == undefined){
+                  res.json('expired')
+                  return
+            }
             if(err){
               res.sendStatus(403)
             }else{
@@ -100,14 +105,21 @@ picture.post('/',verifyToken, async (req, res, next) =>{
                   }
         }
 
-    picture.post('/:postId',verifyToken, async (req, res, next) =>{
+    picture.post('/:postId',verifyToken, async (req, res, next) =>{ // picture for posts
       let y = await req.params.postId
       console.log(y)
-        jwt.verify(req.token, 'secretekey', async (err, authData) =>{
-            if(err){
+    jwt.verify(req.token, 'secretekey', async (err, authData) =>{
+      if(!authData.user.blogauthor){return}
+        if(err){
               res.sendStatus(403)
-            }else{
-
+          }else{
+            const aut = await prisma.post.findUnique({
+            where: { id: Number(y)}
+          })
+            if(Number(aut.authorId != authData.user.id)){
+            res.json('denied')
+              return 
+            }
         upload(req, res, async function (err){
               if (err instanceof multer.MulterError){
                   console.log(err.message)
@@ -120,11 +132,11 @@ picture.post('/',verifyToken, async (req, res, next) =>{
                 let xx = await uploadImage(x.path)
                // console.log(xx)
                 await uploadPostPic(xx.secure_url, Number(y))
-                next()             
+              //  next() 
+                res.json(xx.secure_url)    
             })    
           }
       })
-        res.json('dvgervgrt')
 })
       
 export default picture

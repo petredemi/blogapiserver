@@ -1,7 +1,7 @@
 import { name } from 'ejs';
 import { prisma } from '../../lib/prisma.js';
 
-async function getUsers(){
+async function getUsers(x){
     const users = await prisma.user.findMany({
         select: {
           id: true,
@@ -12,8 +12,79 @@ async function getUsers(){
           blogauthor:true
         }
     })
+   
+   
+       const authUser = await prisma.user.findUnique({
+        select: {
+            id: true,
+            email: true,
+            profile: true
+        },
+        where: {
+          email: x,
+        }
+    })
+   //   if (x != 'petrudem@yahoo.com'){
+   //         return {authors, authUser}
+    //  }else{
   //  console.log(users)
-    return users
+            return {users, authUser}
+   //   }
+  } 
+  async function getUsersAuth(x){
+    let users = await prisma.user.findMany({
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          profile: true,
+          profession: true,
+          blogauthor:true
+        },
+        where: {
+          blogauthor: true
+        }
+
+      })
+       const authUser = await prisma.user.findUnique({
+        select: {
+            id: true,
+            email: true,
+            profile: true
+        },
+        where: {
+          email: x,
+        }
+    })
+            return {users, authUser}
+  }
+
+  async function getAuthors(x){
+    const authors = await prisma.user.findMany({
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          profile: true,
+          profession: true,
+          blogauthor:true,
+          requestauth: true
+        },
+      // where: {
+     //    blogauthor: true,
+     //  }
+    });
+    const authUser = await prisma.user.findUnique({
+        select: {
+            id: true,
+            profile: true
+        },
+        where: {
+          id: x,
+        }
+    })
+    console.log(authUser)
+    return {authors, authUser}
   } 
 async function getNames() {
     const usernames = await prisma.user.findMany({
@@ -24,25 +95,24 @@ async function getNames() {
         requestauth: true
       }
     })
-    console.log(usernames)
     return usernames
-  
 }
 async function addUser(x, y, z, v, w){
-    const user = await prisma.user.create({
-    data: {
-      name: x,
-      email: y,
-      password: z,
-      profession: v,
-      requestauth: w
+      const user = await prisma.user.create({
+          data: {
+            name: x,
+            email: y,
+            password: z,
+            profession: v,
+            requestauth: w,
+            profile: null,
 
-    },
-    include: {
-      posts: true,
-    },
-  })
- return { id: user.id, name: user.name, email: user.email, profession: user.profession}
+          },
+          include: {
+            posts: true,
+          },
+        })
+    return { id: user.id, name: user.name, email: user.email, profession: user.profession, profile: user.profile}
     
 }
 async function logUser(email) {
@@ -52,7 +122,6 @@ async function logUser(email) {
       //      password: password
             },
         })
-        console.log(user)
      if (user == null){return}
         return user
 }
@@ -65,7 +134,16 @@ async function uploadimgDb(xfile, iduser){
                       id: iduser
                     }
           })
-      console.log('ergewrgvrew')
+}
+async function updateMemberRequest(x, y, z){
+  const member = await prisma.user.update({
+              where:{ id: Number(x)},
+              data: {
+                profession: y,
+                requestauth: Boolean(z)
+              }
+            })
+        return member
 }
 
 
@@ -88,4 +166,4 @@ function verifyToken(req, res, next){
     res.sendStatus(403)
   }
 }
- export {getUsers, addUser, logUser, verifyToken, getNames, uploadimgDb}
+ export {getUsers,getAuthors, addUser, logUser, verifyToken, getNames, uploadimgDb, updateMemberRequest, getUsersAuth}

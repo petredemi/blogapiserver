@@ -1,11 +1,18 @@
 
+import { name } from 'ejs';
 import { prisma } from '../../lib/prisma.js';
 
 
 async function getMessages(){
     const messages = await prisma.post.findMany()
-   // console.log(messages)
-    return messages
+    const authorname = await prisma.user.findMany({
+      select: {
+        id: true,
+        name:true,
+      }
+    })
+  //  console.log(authorname, messages)
+    return {messages, authorname}
   } 
 async function addMessage(x, y, w){
     const message = await prisma.post.create({
@@ -47,7 +54,6 @@ async function uploadPostPic(xfile, idpost){
                     }
           })
 
-      console.log('ergewrgvrew')
       return picture
 }
 

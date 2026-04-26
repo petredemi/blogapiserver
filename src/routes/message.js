@@ -10,6 +10,11 @@ router.post('/', verifyToken, async (req, res) => {
   const {title, content} = await req.body
   if(title == '' || content == ''){return}
 jwt.verify(req.token, 'secretekey', async (err, authData) =>{
+  console.log(authData)
+  if(authData == undefined || !authData.user.blogauthor){
+    res.json('expired')
+    return
+  }
     if(err){
       res.sendStatus(403)
     }else{
@@ -21,17 +26,19 @@ jwt.verify(req.token, 'secretekey', async (err, authData) =>{
 router.get('/', verifyToken, async (req, res) => {
   
 jwt.verify(req.token, 'secretekey', async (err, authData) =>{
-  console.log(authData)
+ // console.log(authData)
+  if(authData == undefined){return}
     if(err){
       res.sendStatus(403)
     }else{
       // let xx =  await getComments(979)
-         const usernames = await getNames() 
+      //   const usernames = await getNames() 
          const messages = await getMessages()
-       //  console.log(xx)
+       //  console.log(messages)
          res.json({
-            messages,
-            usernames
+            messages: messages.messages,
+            authornames: messages.authorname,
+      //      usernames
           })
       }
     })
@@ -39,7 +46,12 @@ jwt.verify(req.token, 'secretekey', async (err, authData) =>{
 router.get('/:getId', verifyToken, async (req, res) => {
   const x = await req.params.getId
 jwt.verify(req.token, 'secretekey', async (err, authData) =>{
-    console.log(authData.user.name)
+   // console.log(authData.user.name)
+    const aut = await prisma.post.findUnique({
+          where: { id: Number(x)}
+        })
+    if(Number(aut.authorId != authData.user.id)){return; }
+
    const postx = await getPost(Number(x))
     if(err){
       res.sendStatus(403)
@@ -54,12 +66,11 @@ router.put('/:postId', verifyToken, async (req, res) => {
   const x = await req.params.postId
   const {title, content} = await req.body
 jwt.verify(req.token, 'secretekey', async (err, authData) =>{
-    console.log(authData.user.name)
-   const updatex = await updatePostx(Number(x), title, content)
+    const updatex = await updatePostx(Number(x), title, content)
     if(err){
       res.sendStatus(403)
     }else{
-       console.log(updatex)
+     //  console.log(updatex)
         res.json(updatex)
       }
     })
@@ -67,6 +78,14 @@ jwt.verify(req.token, 'secretekey', async (err, authData) =>{
 router.delete('/:messageId', verifyToken, async (req, res, next) =>{
     const x =  await req.params.messageId
     jwt.verify(req.token, 'secretekey', async (err, authData) =>{
+
+    const aut = await prisma.post.findUnique({
+          where: { id: Number(x)}
+        })
+    if(Number(aut.authorId != authData.user.id) && authData.user.email != 'petrudem@yahoo.com'){
+      res.json('denied')
+      return 
+    }
 
     if(err){
       res.sendStatus(403)
@@ -78,14 +97,20 @@ router.delete('/:messageId', verifyToken, async (req, res, next) =>{
         })
      console.log(ex)
      if (ex == null){ return}
+        await prisma.comment.deleteMany({
+            where: {
+            postId: Number(x),
+            },
+          });
+
         await prisma.post.delete({
             where: {
               id: Number(x),
             }
           });
+          res.json('1success')
       }
     })
-    res.json('success')
 });
 
 router.get('/:postId/comments', verifyToken, async (req, res) => {
@@ -102,7 +127,7 @@ router.get('/:postId/comments', verifyToken, async (req, res) => {
 router.post('/:postId/comment', verifyToken, async (req, res) => {
      const {commenttext} = await req.body
      const postid = await req.params.postId
-     //if(commenttxt == ''){return}
+     if(commenttext == ''){return}
   jwt.verify(req.token, 'secretekey', async (err, authData) =>{
     if (authData == undefined){return}
       let authx = await authData.user.id
