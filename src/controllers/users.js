@@ -1,4 +1,3 @@
-import { name } from 'ejs';
 import { prisma } from '../../lib/prisma.js';
 
 async function getUsers(x){
