@@ -79,8 +79,6 @@ picture.post('/',verifyToken, async (req, res, next) =>{   //for profile picture
                 let xx = await uploadImage(x.path)
               //  console.log(xx)
                 await uploadimgDb(xx.secure_url, authData.user.id)
-                
-                //next()             
                 res.json(xx.secure_url)
             })  
            // console.log(xx)  
@@ -89,8 +87,6 @@ picture.post('/',verifyToken, async (req, res, next) =>{   //for profile picture
       })
 })
     async function uploadImage(imagePath){
-                // Use the uploaded file's name as the asset's public ID and 
-                // allow overwriting the asset with new versions
             const options = {
                     use_filename: true,
                     unique_filename: false,

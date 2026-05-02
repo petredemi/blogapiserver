@@ -69,9 +69,9 @@ async function getUsers(x){
           blogauthor:true,
           requestauth: true
         },
-      // where: {
-     //    blogauthor: true,
-     //  }
+       where: {
+         blogauthor: true,
+       }
     });
     const authUser = await prisma.user.findUnique({
         select: {
