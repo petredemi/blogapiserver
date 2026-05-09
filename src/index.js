@@ -1,30 +1,23 @@
+
 import express from 'express'
-import cors from 'cors'
-import { v4 as uuidv4 } from 'uuid';
-import {prisma} from '../lib/prisma.js'
+//import cors from 'cors'
+//import { v4 as uuidv4 } from 'uuid';
+//import {prisma} from '../lib/prisma.js'
 import routes from './routes/index.js';
-import passport from 'passport';
-import session from 'express-session';
-import bcrypt from 'bcryptjs';
+//import passport from 'passport';
+//import session from 'express-session';
+//import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken'
 const app = express()
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors())
-const allowedOrigins = ['https://european-cuisine.netlify.app', 'https://blogabout-cuisine.netlify.app/']
+
 let corsOptions = {
-      origin: function (origin, callback){
-      //  origin = allowedOrigins
-        if(!origin) return callback(null, true)
-        if(allowedOrigins.indexOf(origin) !== -1){
-          return callback(null, true);
-        }else{
-          return callback(new Error('Not allowed by CORS'))
-        }
-      }
+      origin: 'https://european-cuisine.netlify.app'
 
 }
-
+/*
 app.get('/api', verifyToken, (req, res) =>{
   //console.log(req.me)
    jwt.verify(req.token, 'secretekey', (err, authData) =>{
@@ -50,7 +43,7 @@ app.get('/api/posts',verifyToken, (req, res) =>{
         })
     }
   }) 
-})
+}) */
 app.post('/api/login', (req, res) =>{
   const user = {
     id: 1,
@@ -91,6 +84,6 @@ app.use('/picture', cors(corsOptions), routes.picture)
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`My first Express app - listening on port ${PORT}!`);
+  console.log(`My first Express app - listening on port ${PORT}!`)
   
-});
+})
