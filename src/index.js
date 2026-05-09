@@ -1,22 +1,25 @@
-
 import express from 'express'
 import cors from 'cors'
-//import { v4 as uuidv4 } from 'uuid';
-//import {prisma} from '../lib/prisma.js'
 import routes from './routes/index.js';
-//import passport from 'passport';
-//import session from 'express-session';
-//import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken'
+
 const app = express()
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors())
-
-let corsOptions = {
-      origin: 'https://european-cuisine.netlify.app'
-
-}
+//app.use(cors())
+//let corsOptions = {
+ //     origin: 'https://european-cuisine.netlify.app'
+//}
+const whitelist = ['https://european-cuisine.netlify.app',  'https://blogabout-cuisine.netlify.app'];
+app.use(cors({
+    origin: function (origin, callback) {
+        if (whitelist.indexOf(origin) !== -1 || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    }
+}));
 /*
 app.get('/api', verifyToken, (req, res) =>{
   //console.log(req.me)
@@ -43,7 +46,7 @@ app.get('/api/posts',verifyToken, (req, res) =>{
         })
     }
   }) 
-}) */
+})
 app.post('/api/login', (req, res) =>{
   const user = {
     id: 1,
@@ -55,7 +58,7 @@ app.post('/api/login', (req, res) =>{
       token
     })
   })
-})
+}) */
 // format of token
 //authorization : Bearer <access_token>
 
@@ -76,14 +79,14 @@ function verifyToken(req, res, next){
     res.sendStatus(403)
   }
 }
-app.use('/', cors(corsOptions), routes.firstpage)
-app.use('/user',cors(corsOptions), routes.user)
-app.use('/message',cors(corsOptions), routes.message)
-app.use('/log-in',cors(corsOptions), routes.login)
-app.use('/picture', cors(corsOptions), routes.picture)
+app.use('/', cors(), routes.firstpage)
+app.use('/user',cors(), routes.user)
+app.use('/message',cors(), routes.message)
+app.use('/log-in',cors(), routes.login)
+app.use('/picture', cors(), routes.picture)
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`My first Express app - listening on port ${PORT}!`)
-  
-})
+const PORT = process.env.PORT || 3000; 
+app.listen(PORT)// () => {
+ // console.log(`My first Express app - listening on port ${PORT}!`)
+//})
+
