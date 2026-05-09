@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken'
 const app = express()
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-const whitelist = ['https://european-cuisine.netlify.app',  'https://blogabout-cuisine.netlifyyy.app'];
+const whitelist = ['https://european-cuisine.netlify.app',  'https://blogabout-cuisine.netlify.app'];
 app.use(cors({
     origin: function (origin, callback) {
         if (whitelist.indexOf(origin) !== -1 || !origin) {
