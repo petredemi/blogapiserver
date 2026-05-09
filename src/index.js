@@ -11,8 +11,17 @@ const app = express()
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors())
+const allowedOrigins = ['https://european-cuisine.netlify.app', 'https://blogabout-cuisine.netlify.app/']
 let corsOptions = {
-      origin: 'https://european-cuisine.netlify.app'
+      origin: function (origin, callback){
+      //  origin = allowedOrigins
+        if(!origin) return callback(null, true)
+        if(allowedOrigins.indexOf(origin) !== -1){
+          return callback(null, true);
+        }else{
+          return callback(new Error('Not allowed by CORS'))
+        }
+      }
 
 }
 
