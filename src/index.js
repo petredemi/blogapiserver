@@ -11,6 +11,10 @@ const app = express()
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors())
+let corsOptions = {
+      origin: 'https://european-cuisine.netlify.app'
+
+}
 
 app.get('/api', verifyToken, (req, res) =>{
   //console.log(req.me)
@@ -70,12 +74,11 @@ function verifyToken(req, res, next){
     res.sendStatus(403)
   }
 }
-app.use('/', routes.firstpage)
-app.use('/user', routes.user)
-app.use('/message', routes.message)
-app.use('/log-in', routes.login)
-app.use('/picture', routes.picture)
-//app.use('/messages', routes.comments)
+app.use('/', cors(corsOptions), routes.firstpage)
+app.use('/user',cors(corsOptions), routes.user)
+app.use('/message',cors(corsOptions), routes.message)
+app.use('/log-in',cors(corsOptions), routes.login)
+app.use('/picture', cors(corsOptions), routes.picture)
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
