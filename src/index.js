@@ -1,7 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import routes from './routes/index.js';
-import jwt from 'jsonwebtoken'
+//import jwt from 'jsonwebtoken'
 
 const app = express()
 app.use(express.json());
@@ -57,7 +57,7 @@ app.post('/api/login', (req, res) =>{
 }) */
 // format of token
 //authorization : Bearer <access_token>
-
+/*
 function verifyToken(req, res, next){
   //get autorisation token
   const bearerHeader = req.headers['authorization']
@@ -73,16 +73,16 @@ function verifyToken(req, res, next){
   }else {
     //forbidden
     res.sendStatus(403)
-  }
-}
-app.use('/', cors(), routes.firstpage)
-app.use('/user',cors(), routes.user)
-app.use('/message',cors(), routes.message)
-app.use('/log-in',cors(), routes.login)
-app.use('/picture', cors(), routes.picture)
+  } 
+} */
+app.use('/',routes.firstpage)
+app.use('/user', routes.user)
+app.use('/message', routes.message)
+app.use('/log-in', routes.login)
+app.use('/picture', routes.picture)
 
 const PORT = process.env.PORT || 3000; 
-app.listen(PORT)// () => {
- // console.log(`My first Express app - listening on port ${PORT}!`)
-//})
+app.listen(PORT, () => {
+  console.log(`My first Express app - listening on port ${PORT}!`)
+})
 
