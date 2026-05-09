@@ -1,6 +1,6 @@
 
 import express from 'express'
-//import cors from 'cors'
+import cors from 'cors'
 //import { v4 as uuidv4 } from 'uuid';
 //import {prisma} from '../lib/prisma.js'
 import routes from './routes/index.js';
