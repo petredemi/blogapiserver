@@ -118,8 +118,9 @@ async function logUser(email) {
       const user = await prisma.user.findUnique({
         where: {
             email: email,
-      //      password: password
-            },
+          //  password: password
+          },
+      
         })
      if (user == null){return}
         return user

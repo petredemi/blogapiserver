@@ -23,25 +23,13 @@ jwt.verify(req.token, 'secretekey', async (err, authData) =>{
       }
     })
 });
-router.get('/', verifyToken, async (req, res) => {
-  
-jwt.verify(req.token, 'secretekey', async (err, authData) =>{
- // console.log(authData)
-  if(authData == undefined){return}
-    if(err){
-      res.sendStatus(403)
-    }else{
-      // let xx =  await getComments(979)
-      //   const usernames = await getNames() 
-         const messages = await getMessages()
-       //  console.log(messages)
-         res.json({
-            messages: messages.messages,
-            authornames: messages.authorname,
-      //      usernames
-          })
-      }
-    })
+router.get('/', async (req, res) => {
+             const messages = await getMessages()
+           //  console.log(messages)
+             res.json({
+                messages: messages.messages,
+                authornames: messages.authorname,
+              })
 })
 router.get('/:getId', verifyToken, async (req, res) => {
   const x = await req.params.getId
@@ -113,16 +101,12 @@ router.delete('/:messageId', verifyToken, async (req, res, next) =>{
     })
 });
 
-router.get('/:postId/comments', verifyToken, async (req, res) => {
+router.get('/:postId/comments', async (req, res) => {
   let idx = await req.params.postId
-    jwt.verify(req.token, 'secretekey', async (err, authData) =>{
+  //  jwt.verify(req.token, 'secretekey', async (err, authData) =>{
       let x = await getComments(Number(idx))
-       if(err){
-        res.sendStatus(403)
-    }else{
       res.json(x)
-    }
-  })
+ // })
 });
 router.post('/:postId/comment', verifyToken, async (req, res) => {
      const {commenttext} = await req.body
@@ -142,7 +126,7 @@ router.post('/:postId/comment', verifyToken, async (req, res) => {
       }
   })
 });
-router.put('/:postId/comment',async (req, res) => {
+router.put('/:postId/comment',async (req, res) => { //not used
       console.log('dsvsdfv')    
       res.json('hello world')
 });

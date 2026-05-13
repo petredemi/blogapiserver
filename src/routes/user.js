@@ -29,6 +29,7 @@ router.post('/', async (req, res) => {
             })
         })
   });
+  
 router.delete('/:userId', verifyToken, async (req, res) =>{
     const x =  await req.params.userId
     console.log(x)
