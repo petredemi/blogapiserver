@@ -4,7 +4,7 @@ import { prisma } from '../../lib/prisma.js';
 async function getMessages(){
     const messages = await prisma.post.findMany({
          orderBy: {
-            createdAt: 'asc',
+            createdAt: 'desc',
          }
       })
   
