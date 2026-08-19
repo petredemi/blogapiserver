@@ -55,7 +55,4 @@ async function uploadPostPic(xfile, idpost){
 
       return picture
 }
-console.log('sdgfegfergw')
-
-getMessages()
-  export {getMessages, addMessage, getPost, updatePostx, uploadPostPic}
+export {getMessages, addMessage, getPost, updatePostx, uploadPostPic}
