@@ -2,15 +2,17 @@ import { prisma } from '../../lib/prisma.js';
 
 
 async function getMessages(){
-    const messages = await prisma.post.findMany()
+    const messages = await prisma.post.findMany({
+         orderBy: {
+            createdAt: 'asc',
+         }
+      })
+  
     const authorname = await prisma.user.findMany({
       select: {
         id: true,
         name:true,
-      },
-      orderBy: {
-        createdAt: 'asc',
-      },
+      },     
     })
     return {messages, authorname}
   } 
