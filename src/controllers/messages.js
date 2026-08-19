@@ -9,8 +9,8 @@ async function getMessages(){
         name:true,
       },
       orderBy: {
-        createdAt: "desc"
-      }
+        createdAt: "desc",
+      },
     })
     return {messages, authorname}
   } 
