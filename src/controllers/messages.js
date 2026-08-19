@@ -7,9 +7,11 @@ async function getMessages(){
       select: {
         id: true,
         name:true,
+      },
+      orderBy: {
+        createdAt: "desc"
       }
     })
-  //  console.log(authorname, messages)
     return {messages, authorname}
   } 
 async function addMessage(x, y, w){
@@ -21,7 +23,6 @@ async function addMessage(x, y, w){
       published:true
       }
   })
-  console.log(message)
   return message
 }
 async function getPost(x) {
@@ -54,6 +55,7 @@ async function uploadPostPic(xfile, idpost){
 
       return picture
 }
+console.log('sdgfegfergw')
 
-
+getMessages()
   export {getMessages, addMessage, getPost, updatePostx, uploadPostPic}

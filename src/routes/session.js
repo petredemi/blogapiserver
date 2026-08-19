@@ -1,10 +1,7 @@
 import { Router } from "express";
 import { logUser } from "../controllers/users.js";
-import passport from "passport";
 import bcrypt from "bcryptjs";
 import jwt from 'jsonwebtoken'
-import { profile } from "console";
-
 const login = Router()
 login.post('/', async (req, res) => {
     const {email, password} = await req.body
