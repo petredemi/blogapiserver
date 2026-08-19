@@ -9,7 +9,7 @@ async function getMessages(){
         name:true,
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: 'asc',
       },
     })
     return {messages, authorname}
