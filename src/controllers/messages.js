@@ -12,6 +12,7 @@ async function getMessages(){
       select: {
         id: true,
         name:true,
+        profile:true,
       },     
     })
     return {messages, authorname}
